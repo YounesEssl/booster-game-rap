@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RAP LEGENDS - Card Editor</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #0a0a0a 100%);
+        color: #fff;
+        min-height: 100vh;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 40px 20px;
+        display: flex;
+        gap: 60px;
+        align-items: flex-start;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+
+      /* Header */
+      header {
+        width: 100%;
+        padding: 20px 0 40px;
+        text-align: center;
+        border-bottom: 1px solid #222;
+        margin-bottom: 20px;
+      }
+
+      header h1 {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 48px;
+        letter-spacing: 4px;
+        color: #C9A227;
+        margin-bottom: 8px;
+      }
+
+      header p {
+        color: #666;
+        font-size: 14px;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+      }
+
+      /* Card Preview */
+      .card-preview {
+        position: relative;
+        width: 350px;
+        flex-shrink: 0;
+      }
+
+      .card-preview canvas {
+        width: 100%;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5), 0 0 40px rgba(201, 162, 39, 0.1);
+      }
+
+      /* Editor Panel */
+      .editor-panel {
+        flex: 1;
+        max-width: 400px;
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid #222;
+        border-radius: 16px;
+        padding: 32px;
+      }
+
+      .editor-panel h2 {
+        font-family: 'Bebas Neue', sans-serif;
+        font-size: 28px;
+        letter-spacing: 2px;
+        margin-bottom: 24px;
+        color: #fff;
+      }
+
+      .form-group {
+        margin-bottom: 24px;
+      }
+
+      .form-group label {
+        display: block;
+        font-size: 12px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: #888;
+        margin-bottom: 8px;
+      }
+
+      .form-group input[type="text"],
+      .form-group input[type="number"] {
+        width: 100%;
+        padding: 14px 16px;
+        background: rgba(0, 0, 0, 0.4);
+        border: 1px solid #333;
+        border-radius: 8px;
+        color: #fff;
+        font-size: 16px;
+        font-family: 'Inter', sans-serif;
+        transition: border-color 0.2s;
+      }
+
+      .form-group input:focus {
+        outline: none;
+        border-color: #C9A227;
+      }
+
+      .form-group input[type="number"] {
+        -moz-appearance: textfield;
+      }
+
+      .form-group input[type="number"]::-webkit-outer-spin-button,
+      .form-group input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+      }
+
+      .stat-row {
+        display: flex;
+        gap: 16px;
+      }
+
+      .stat-row .form-group {
+        flex: 1;
+      }
+
+      .slider-group {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .slider-group input[type="range"] {
+        flex: 1;
+        -webkit-appearance: none;
+        height: 6px;
+        background: #333;
+        border-radius: 3px;
+        cursor: pointer;
+      }
+
+      .slider-group input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 18px;
+        height: 18px;
+        background: #C9A227;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: transform 0.2s;
+      }
+
+      .slider-group input[type="range"]::-webkit-slider-thumb:hover {
+        transform: scale(1.2);
+      }
+
+      .slider-value {
+        min-width: 45px;
+        text-align: right;
+        font-weight: 700;
+        font-size: 18px;
+        color: #C9A227;
+      }
+
+      /* Buttons */
+      .buttons {
+        display: flex;
+        gap: 12px;
+        margin-top: 32px;
+      }
+
+      .btn {
+        flex: 1;
+        padding: 16px 24px;
+        border: none;
+        border-radius: 8px;
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #C9A227 0%, #8B7355 100%);
+        color: #000;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(201, 162, 39, 0.3);
+      }
+
+      .btn-secondary {
+        background: transparent;
+        border: 1px solid #333;
+        color: #888;
+      }
+
+      .btn-secondary:hover {
+        border-color: #C9A227;
+        color: #C9A227;
+      }
+
+      /* Back link */
+      .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        color: #666;
+        text-decoration: none;
+        font-size: 14px;
+        margin-bottom: 20px;
+        transition: color 0.2s;
+      }
+
+      .back-link:hover {
+        color: #C9A227;
+      }
+
+      /* Divider */
+      .divider {
+        height: 1px;
+        background: #222;
+        margin: 24px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <a href="/" class="back-link">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+          Retour au jeu
+        </a>
+        <h1>CARD EDITOR</h1>
+        <p>Personnalisez les stats de vos cartes</p>
+      </header>
+
+      <div class="card-preview">
+        <canvas id="cardCanvas" width="700" height="980"></canvas>
+      </div>
+
+      <div class="editor-panel">
+        <h2>NEKFEU</h2>
+
+        <div class="form-group">
+          <label>Popularite</label>
+          <div class="slider-group">
+            <input type="range" id="popularite" min="0" max="100" value="85">
+            <span class="slider-value" id="populariteValue">85</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Freestyle</label>
+          <div class="slider-group">
+            <input type="range" id="freestyle" min="0" max="100" value="92">
+            <span class="slider-value" id="freestyleValue">92</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Feat</label>
+          <div class="slider-group">
+            <input type="range" id="feat" min="0" max="100" value="78">
+            <span class="slider-value" id="featValue">78</span>
+          </div>
+        </div>
+
+        <div class="buttons">
+          <button class="btn btn-secondary" id="resetBtn">Reset</button>
+          <button class="btn btn-primary" id="saveBtn">Sauvegarder</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const canvas = document.getElementById('cardCanvas');
+      const ctx = canvas.getContext('2d');
+
+      // Load base card image
+      const cardImage = new Image();
+      cardImage.src = '/textures/cards/nekfeu.png';
+
+      // Stats
+      let stats = {
+        popularite: 85,
+        freestyle: 92,
+        feat: 78
+      };
+
+      // Load saved stats from localStorage
+      const saved = localStorage.getItem('nekfeu-stats');
+      if (saved) {
+        stats = { ...stats, ...JSON.parse(saved) };
+        document.getElementById('popularite').value = stats.popularite;
+        document.getElementById('freestyle').value = stats.freestyle;
+        document.getElementById('feat').value = stats.feat;
+      }
+
+      function drawCard() {
+        // Clear
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw base image
+        ctx.drawImage(cardImage, 0, 0, canvas.width, canvas.height);
+
+        // Draw stats text - in the blank area (___) before "/ 100"
+        ctx.font = '700 32px Inter, sans-serif';
+        ctx.fillStyle = '#FFFFFF';
+        ctx.textAlign = 'center';
+
+        // Stats positions - in the _____ blank area between ":" and "/ 100"
+        const statsX = 455;
+        const populariteY = 800;
+        const freestyleY = 845;
+        const featY = 890;
+
+        ctx.fillText(stats.popularite.toString(), statsX, populariteY);
+        ctx.fillText(stats.freestyle.toString(), statsX, freestyleY);
+        ctx.fillText(stats.feat.toString(), statsX, featY);
+      }
+
+      // Wait for image to load
+      cardImage.onload = () => {
+        drawCard();
+        updateSliderValues();
+      };
+
+      // Update slider value displays
+      function updateSliderValues() {
+        document.getElementById('populariteValue').textContent = stats.popularite;
+        document.getElementById('freestyleValue').textContent = stats.freestyle;
+        document.getElementById('featValue').textContent = stats.feat;
+      }
+
+      // Event listeners for sliders
+      document.getElementById('popularite').addEventListener('input', (e) => {
+        stats.popularite = parseInt(e.target.value);
+        updateSliderValues();
+        drawCard();
+      });
+
+      document.getElementById('freestyle').addEventListener('input', (e) => {
+        stats.freestyle = parseInt(e.target.value);
+        updateSliderValues();
+        drawCard();
+      });
+
+      document.getElementById('feat').addEventListener('input', (e) => {
+        stats.feat = parseInt(e.target.value);
+        updateSliderValues();
+        drawCard();
+      });
+
+      // Save button
+      document.getElementById('saveBtn').addEventListener('click', () => {
+        localStorage.setItem('nekfeu-stats', JSON.stringify(stats));
+        alert('Stats sauvegardees !');
+      });
+
+      // Reset button
+      document.getElementById('resetBtn').addEventListener('click', () => {
+        stats = {
+          popularite: 85,
+          freestyle: 92,
+          feat: 78
+        };
+        document.getElementById('popularite').value = stats.popularite;
+        document.getElementById('freestyle').value = stats.freestyle;
+        document.getElementById('feat').value = stats.feat;
+        updateSliderValues();
+        drawCard();
+      });
+    </script>
+  </body>
+</html>

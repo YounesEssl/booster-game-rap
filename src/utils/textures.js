@@ -472,6 +472,92 @@ export function createNormalMapTexture() {
 // ============================================
 // CARD TEXTURES (High Res)
 // ============================================
+
+// Helper to load image
+function loadImage(src) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+
+// Preloaded images cache
+const imageCache = {};
+const textureCache = {};
+
+// Preload card images
+export async function preloadCardImages(cardsData) {
+  for (const data of cardsData) {
+    if (data.image) {
+      try {
+        imageCache[data.image] = await loadImage(data.image);
+        // Create texture with stats overlay
+        const tex = createCardTextureFromImage(data.image, data.name);
+        textureCache[data.image] = tex;
+      } catch (e) {
+        console.warn(`Failed to load image: ${data.image}`);
+      }
+    }
+  }
+}
+
+// Create card texture from image with stats overlay
+function createCardTextureFromImage(imagePath, cardName) {
+  const img = imageCache[imagePath];
+  if (!img) return null;
+
+  const canvas = document.createElement('canvas');
+  canvas.width = 700;
+  canvas.height = 980;
+  const ctx = canvas.getContext('2d');
+
+  // Draw base image
+  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+  // Load stats from localStorage
+  const statsKey = `${cardName.toLowerCase()}-stats`;
+  let stats = {
+    popularite: 85,
+    freestyle: 92,
+    feat: 78,
+    cardNum: 1,
+    totalCards: 100
+  };
+
+  const saved = localStorage.getItem(statsKey);
+  if (saved) {
+    stats = { ...stats, ...JSON.parse(saved) };
+  }
+
+  // Draw stats text - in the blank area (___) before "/ 100"
+  ctx.font = '700 32px Inter, sans-serif';
+  ctx.fillStyle = '#FFFFFF';
+  ctx.textAlign = 'center';
+
+  // Stats positions - matching editor positions
+  const statsX = 455;
+  const populariteY = 800;
+  const freestyleY = 845;
+  const featY = 890;
+
+  ctx.fillText(stats.popularite.toString(), statsX, populariteY);
+  ctx.fillText(stats.freestyle.toString(), statsX, freestyleY);
+  ctx.fillText(stats.feat.toString(), statsX, featY);
+
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.anisotropy = 16;
+  tex.needsUpdate = true;
+  return tex;
+}
+
+// Get preloaded texture
+export function getPreloadedTexture(imagePath) {
+  return textureCache[imagePath] || null;
+}
+
 export function createCardTexture(data, index) {
   const canvas = document.createElement('canvas');
   canvas.width = 800;  // Double res

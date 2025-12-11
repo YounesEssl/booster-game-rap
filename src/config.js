@@ -60,9 +60,9 @@ export const CONFIG = {
 };
 
 export const CARDS_DATA = [
-  { name: 'BIGFLO', subtitle: 'Le Lyriciste', rarity: 'legendary', hp: 200, colors: ['#D4AF37', '#B8860B'], type: 'OR' },
-  { name: 'JUL', subtitle: 'Le Prolifique', rarity: 'epic', hp: 180, colors: ['#8B5CF6', '#A855F7'], type: 'OVNI' },
-  { name: 'NEKFEU', subtitle: 'Le Poète', rarity: 'rare', hp: 160, colors: ['#0EA5E9', '#06B6D4'], type: 'PLUME' },
-  { name: 'BOOBA', subtitle: 'Le Duc', rarity: 'legendary', hp: 220, colors: ['#1F1F1F', '#374151'], type: 'PIRATE' },
-  { name: 'PNL', subtitle: 'Les Aliens', rarity: 'mythic', hp: 250, colors: ['#10B981', '#34D399'], type: 'QLF' },
+  { name: 'BIGFLO', subtitle: 'Le Lyriciste', rarity: 'legendary', hp: 200, colors: ['#D4AF37', '#B8860B'], type: 'OR', image: null },
+  { name: 'JUL', subtitle: 'Le Prolifique', rarity: 'epic', hp: 180, colors: ['#8B5CF6', '#A855F7'], type: 'OVNI', image: null },
+  { name: 'NEKFEU', subtitle: 'Le Poète', rarity: 'rare', hp: 160, colors: ['#0EA5E9', '#06B6D4'], type: 'PLUME', image: '/textures/cards/nekfeu.png' },
+  { name: 'BOOBA', subtitle: 'Le Duc', rarity: 'legendary', hp: 220, colors: ['#1F1F1F', '#374151'], type: 'PIRATE', image: null },
+  { name: 'PNL', subtitle: 'Les Aliens', rarity: 'mythic', hp: 250, colors: ['#10B981', '#34D399'], type: 'QLF', image: null },
 ];

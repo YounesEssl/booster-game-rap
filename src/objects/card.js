@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import { CONFIG, CARDS_DATA } from '../config.js';
-import { createCardTexture, createCardBackTexture } from '../utils/textures.js';
+import { createCardTexture, createCardBackTexture, getPreloadedTexture } from '../utils/textures.js';
 import { createHoloMaterial } from '../utils/shaders.js';
 import { createHoloShaderMaterial } from '../utils/holoShader.js';
 
@@ -21,8 +21,14 @@ export function createCard(index) {
   // 1. Geometry: BoxGeometry for perfect UV mapping (Visuals > Geometry Detail for now)
   const geometry = new THREE.BoxGeometry(width, height, depth);
 
-  // 2. Materials
-  const frontTex = createCardTexture(data, index);
+  // 2. Materials - use preloaded image if available, otherwise generate
+  let frontTex;
+  if (data.image) {
+    frontTex = getPreloadedTexture(data.image);
+  }
+  if (!frontTex) {
+    frontTex = createCardTexture(data, index);
+  }
   const backTex = createCardBackTexture();
 
   // Center textures

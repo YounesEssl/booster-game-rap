@@ -1,4 +1,4 @@
-import { CONFIG } from './config.js';
+import { CONFIG, CARDS_DATA } from './config.js';
 import { scene, renderer, setupLights, mountRenderer, handleResize } from './core/scene.js';
 import { setupEnvironment, updateBackground } from './core/environment.js';
 import { createComposer, updateCameraEffects } from './core/postprocessing.js';
@@ -11,6 +11,7 @@ import { updateUI, showLoading } from './core/ui.js';
 import { updateParticles } from './core/particles.js';
 import { updateHoloTime } from './utils/holoShader.js';
 import { setComposerRef, updateAnimationDebris } from './core/animations.js';
+import { preloadCardImages } from './utils/textures.js';
 
 // ============================================
 
@@ -36,6 +37,9 @@ async function init() {
 
   state.phase = 'loading';
   showLoading();
+
+  // Preload card images
+  await preloadCardImages(CARDS_DATA);
 
   // Create booster
   state.booster = await createBooster();
